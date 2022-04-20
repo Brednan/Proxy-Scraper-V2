@@ -54,3 +54,9 @@ class MaxThreads:
         self.slider = tk.Scale(master, bg=bg, from_=0, to=300, orient=tk.HORIZONTAL, length=width, highlightthickness=0, fg='white', troughcolor='white', width=20)
         self.slider.place(anchor=tk.SW, x=pos[0] + 50, y=pos[1])
         self.slider.set(150)
+
+
+class ProxyTypes:
+    def __init__(self, master, http_pos: tuple, bg_color):
+        http_label = tk.Label(master, font=('default', 17), text='HTTP:', bg=bg_color, fg='white')
+        http_label.place(x= http_pos[0] - 130, y= http_pos[1], anchor=tk.SW)

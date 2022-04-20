@@ -11,4 +11,6 @@ output_dir = OutputFolder(window.window, 25, ('default', 17), (150, 150), bg=bg_
 timeout = Timeout(window.window, bg_color, width=350, pos=(150, 250))
 max_threads = MaxThreads(window.window, bg_color, width=350, pos=(150, 320))
 
+http_proxies = ProxyTypes(window.window, http_pos=(150, 400), bg_color= bg_color)
+
 window.window.mainloop()
