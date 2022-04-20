@@ -19,7 +19,7 @@ class Title:
 
 
 class OutputFolder:
-    def __init__(self, master, width:int, font:tuple, pos:tuple, bg:str):
+    def __init__(self, master, width: int, font: tuple, pos: tuple, bg: str):
         self.entry = tk.Entry(master, width=width, font=font)
         self.entry.place(x=pos[0], y=pos[1], anchor=tk.SW)
 
@@ -28,9 +28,29 @@ class OutputFolder:
         self.button.bind('<Button-1>', lambda e: self.pick_folder())
 
         self.label = tk.Label(master, font=font, text='Output Dir:', fg='white', bg=bg)
-        self.label.place(anchor=tk.SE, x=pos[0] - 10, y=pos[1])
+        self.label.place(anchor=tk.SW, x=pos[0] - 130, y=pos[1])
 
     def pick_folder(self):
         path = askopenfilename()
         self.entry.delete(0, 'end')
         self.entry.insert(0, path)
+
+
+class Timeout:
+    def __init__(self, master, bg, width, pos: tuple):
+        self.label = tk.Label(master=master, font=('default', 17), text='Timeout (MS):', bg=bg, fg='white')
+        self.label.place(anchor=tk.SW, x=pos[0] - 130, y=pos[1])
+
+        self.slider = tk.Scale(master, bg=bg, from_=0, to=5000, orient=tk.HORIZONTAL, length=width, highlightthickness=0, fg='white', troughcolor='white', width=20)
+        self.slider.place(anchor=tk.SW, x=pos[0] + 50, y=pos[1])
+        self.slider.set(2500)
+
+
+class MaxThreads:
+    def __init__(self, master, bg, width, pos: tuple):
+        self.label = tk.Label(master=master, font=('default', 17), text='Max Threads:', bg=bg, fg='white')
+        self.label.place(anchor=tk.SW, x=pos[0] - 130, y=pos[1])
+
+        self.slider = tk.Scale(master, bg=bg, from_=0, to=300, orient=tk.HORIZONTAL, length=width, highlightthickness=0, fg='white', troughcolor='white', width=20)
+        self.slider.place(anchor=tk.SW, x=pos[0] + 50, y=pos[1])
+        self.slider.set(150)
