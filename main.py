@@ -1,8 +1,10 @@
 from GUI_Components import *
+import time
+
 
 bg_color = '#343434'
 
-window = MainWindow(size=(600, 700), is_resizeable=False, icon='./images/app_icon.ico', title='Proxy Scraper V2', bg=bg_color)
+window = MainWindow(size=(600, 460), is_resizeable=False, icon='./images/app_icon.ico', title='Proxy Scraper V2', bg=bg_color)
 
 title = Title(window.window, 'Proxy Scraper V2', 'white', font=('default', 30), pos=(300, 50), bg=bg_color)
 
@@ -11,6 +13,8 @@ output_dir = OutputFolder(window.window, 25, ('default', 17), (150, 150), bg=bg_
 timeout = Timeout(window.window, bg_color, width=350, pos=(150, 250))
 max_threads = MaxThreads(window.window, bg_color, width=350, pos=(150, 320))
 
-http_proxies = ProxyTypes(window.window, http_pos=(150, 400), bg_color= bg_color)
+proxy_types = ProxyTypes(window.window, http_pos=(250, 400), bg_color=bg_color, socks4_pos=(450, 400))
+
+status = Status(window.window, bg_color, pos=(10, 460))
 
 window.window.mainloop()

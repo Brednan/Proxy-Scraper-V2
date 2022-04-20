@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter.filedialog import askopenfilename
 
-
 class MainWindow:
     def __init__(self, size: tuple, is_resizeable: bool, icon, title, bg:str):
         self.window = tk.Tk()
@@ -57,6 +56,24 @@ class MaxThreads:
 
 
 class ProxyTypes:
-    def __init__(self, master, http_pos: tuple, bg_color):
-        http_label = tk.Label(master, font=('default', 17), text='HTTP:', bg=bg_color, fg='white')
-        http_label.place(x= http_pos[0] - 130, y= http_pos[1], anchor=tk.SW)
+    def __init__(self, master, http_pos: tuple, bg_color, socks4_pos: tuple):
+        http_checkbox = tk.Checkbutton(master, text='HTTPS', font=('default', 17), bg=bg_color, fg='white', bd=0, selectcolor='darkgrey')
+        http_checkbox.place(anchor=tk.SW, x=http_pos[0] - 125, y=http_pos[1])
+
+        socks4_checkbox = tk.Checkbutton(master, font=('default', 17), text='SOCKS4', bg=bg_color, fg='white', bd=0, selectcolor='darkgrey')
+        socks4_checkbox.place(x=socks4_pos[0] - 100, y=socks4_pos[1], anchor=tk.SW)
+
+
+class Status:
+    def __init__(self, master, bg_color, pos):
+        self.master = master
+        self.status_var = tk.StringVar(master, 'Status: None')
+
+        self.status_display = tk.Label(master, textvariable=self.status_var, font=('default', 15), fg='white', bg=bg_color)
+        self.status_display.place(anchor=tk.SW, x=pos[0], y=pos[1])
+
+    def status_none(self):
+        self.status_var.set('Status: None')
+
+    def status_scraping(self):
+        self.status_var.set('Status: Scraping')
