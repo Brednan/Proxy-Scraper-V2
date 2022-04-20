@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter.filedialog import askopenfilename
 
 
 class MainWindow:
@@ -10,10 +11,12 @@ class MainWindow:
         self.window.title(title)
         self.window.config(bg=bg)
 
+
 class Title:
     def __init__(self, master, text:str, color:str, font:tuple, pos:tuple, bg:str):
         self.title = tk.Label(master, text=text, fg=color, font=font, bg=bg)
         self.title.place(x=pos[0], y=pos[1], anchor=tk.CENTER)
+
 
 class OutputFolder:
     def __init__(self, master, width:int, font:tuple, pos:tuple, bg:str):
@@ -22,6 +25,12 @@ class OutputFolder:
 
         self.button = tk.Button(master, font=font, text='...')
         self.button.place(anchor=tk.SW, x=pos[0] + 340, y=pos[1], width=70, height=30)
+        self.button.bind('<Button-1>', lambda e: self.pick_folder())
 
         self.label = tk.Label(master, font=font, text='Output Dir:', fg='white', bg=bg)
         self.label.place(anchor=tk.SE, x=pos[0] - 10, y=pos[1])
+
+    def pick_folder(self):
+        path = askopenfilename()
+        self.entry.delete(0, 'end')
+        self.entry.insert(0, path)
