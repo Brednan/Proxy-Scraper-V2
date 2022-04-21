@@ -77,3 +77,15 @@ class Status:
 
     def status_scraping(self):
         self.status_var.set('Status: Scraping')
+
+
+class StartButton:
+    def __init__(self, master, pos: tuple):
+        self.button = tk.Button(master, text='START', fg='white', bg='#00BD03', font=('Arial TUR', 20), relief=tk.FLAT, width=8)
+        self.button.place(anchor=tk.SW, x=pos[0], y=pos[1])
+
+
+class StopButton:
+    def __init__(self, master, pos: tuple):
+        self.button = tk.Button(master, text='STOP', fg='white', bg='#D50000', font=('Arial TUR', 20), relief=tk.FLAT, width=8)
+        self.button.place(anchor=tk.SE, x=pos[0], y=pos[1])

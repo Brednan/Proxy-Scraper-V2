@@ -4,7 +4,7 @@ import time
 
 bg_color = '#343434'
 
-window = MainWindow(size=(600, 460), is_resizeable=False, icon='./images/app_icon.ico', title='Proxy Scraper V2', bg=bg_color)
+window = MainWindow(size=(600, 540), is_resizeable=False, icon='./images/app_icon.ico', title='Proxy Scraper V2', bg=bg_color)
 
 title = Title(window.window, 'Proxy Scraper V2', 'white', font=('default', 30), pos=(300, 50), bg=bg_color)
 
@@ -15,6 +15,9 @@ max_threads = MaxThreads(window.window, bg_color, width=350, pos=(150, 320))
 
 proxy_types = ProxyTypes(window.window, http_pos=(250, 400), bg_color=bg_color, socks4_pos=(450, 400))
 
-status = Status(window.window, bg_color, pos=(10, 460))
+status = Status(window.window, bg_color, pos=(10, 530))
+
+start = StartButton(window.window, pos=(150, 475))
+stop = StopButton(window.window, pos=(450, 475))
 
 window.window.mainloop()
