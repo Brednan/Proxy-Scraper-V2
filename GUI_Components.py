@@ -1,5 +1,8 @@
+import sys
 import tkinter as tk
 from tkinter.filedialog import askopenfilename
+from test import loop_func
+import threading
 
 class MainWindow:
     def __init__(self, size: tuple, is_resizeable: bool, icon, title, bg:str):
@@ -80,12 +83,22 @@ class Status:
 
 
 class StartButton:
-    def __init__(self, master, pos: tuple):
-        self.button = tk.Button(master, text='START', fg='white', bg='#00BD03', font=('Arial TUR', 20), relief=tk.FLAT, width=8)
+    def __init__(self, master, pos: tuple, status):
+        self.status = status
+
+        self.button = tk.Button(master, text='START', fg='white', bg='#00BD03', font=('Arial TUR', 20), relief=tk.FLAT, width=8, command=lambda: self.submit())
         self.button.place(anchor=tk.SW, x=pos[0], y=pos[1])
+
+    def submit(self):
+        self.status.status_var.set('Status: Scraping')
+        threading.Thread(target=loop_func, args=(self.status,)).start()
 
 
 class StopButton:
-    def __init__(self, master, pos: tuple):
-        self.button = tk.Button(master, text='STOP', fg='white', bg='#D50000', font=('Arial TUR', 20), relief=tk.FLAT, width=8)
+    def __init__(self, master, pos: tuple, status):
+        self.status = status
+        self.button = tk.Button(master, text='STOP', fg='white', bg='#D50000', font=('Arial TUR', 20), relief=tk.FLAT, width=8, command=lambda: self.stop_process())
         self.button.place(anchor=tk.SE, x=pos[0], y=pos[1])
+
+    def stop_process(self):
+        self.status.status_var.set('Status: None')
