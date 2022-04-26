@@ -17,7 +17,7 @@ proxy_types = ProxyTypes(window.window, http_pos=(250, 400), bg_color=bg_color, 
 
 status = Status(window.window, bg_color, pos=(10, 530))
 
-start = StartButton(window.window, pos=(150, 475), status=status)
+start = StartButton(window.window, (150, 475), status, output_dir, proxy_types, timeout, max_threads)
 stop = StopButton(window.window, pos=(450, 475), status=status)
 
 window.window.mainloop()

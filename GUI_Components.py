@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter.filedialog import askopenfilename
 from test import loop_func
 import threading
+from scraper import Scraper
 
 class MainWindow:
     def __init__(self, size: tuple, is_resizeable: bool, icon, title, bg:str):
@@ -60,11 +61,13 @@ class MaxThreads:
 
 class ProxyTypes:
     def __init__(self, master, http_pos: tuple, bg_color, socks4_pos: tuple):
-        http_checkbox = tk.Checkbutton(master, text='HTTPS', font=('default', 17), bg=bg_color, fg='white', bd=0, selectcolor='darkgrey')
-        http_checkbox.place(anchor=tk.SW, x=http_pos[0] - 125, y=http_pos[1])
+        self.http_checked = tk.IntVar(value=1)
+        self.http_checkbox = tk.Checkbutton(master, text='HTTPS', font=('default', 17), bg=bg_color, fg='white', bd=0, selectcolor='darkgrey', variable=self.http_checked)
+        self.http_checkbox.place(anchor=tk.SW, x=http_pos[0] - 125, y=http_pos[1])
 
-        socks4_checkbox = tk.Checkbutton(master, font=('default', 17), text='SOCKS4', bg=bg_color, fg='white', bd=0, selectcolor='darkgrey')
-        socks4_checkbox.place(x=socks4_pos[0] - 100, y=socks4_pos[1], anchor=tk.SW)
+        self.socks4_checked = tk.IntVar()
+        self.socks4_checkbox = tk.Checkbutton(master, font=('default', 17), text='SOCKS4', bg=bg_color, fg='white', bd=0, selectcolor='darkgrey', variable=self.socks4_checked)
+        self.socks4_checkbox.place(x=socks4_pos[0] - 100, y=socks4_pos[1], anchor=tk.SW)
 
 
 class Status:
@@ -83,15 +86,23 @@ class Status:
 
 
 class StartButton:
-    def __init__(self, master, pos: tuple, status):
+    def __init__(self, master, pos: tuple, status, output, types, timeout, threads):
         self.status = status
+        self.output = output
+        self.types = types
+        self.timeout = timeout
+        self.threads = threads
 
         self.button = tk.Button(master, text='START', fg='white', bg='#00BD03', font=('Arial TUR', 20), relief=tk.FLAT, width=8, command=lambda: self.submit())
         self.button.place(anchor=tk.SW, x=pos[0], y=pos[1])
 
     def submit(self):
         self.status.status_var.set('Status: Scraping')
-        threading.Thread(target=loop_func, args=(self.status,)).start()
+        threading.Thread(target=self.bot_sequence).start()
+
+    def bot_sequence(self):
+        scraper = Scraper(self.types)
+        scraper.scrape_proxies()
 
 
 class StopButton:
