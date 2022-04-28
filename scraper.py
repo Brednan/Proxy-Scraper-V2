@@ -13,7 +13,7 @@ class Scraper:
         if types.socks4_checked.get() == 1:
             self.socks4 = True
 
-    def scrape_proxies(self, error_scraping):
+    def scrape_proxies(self):
         site1 = Site1('https://free-proxy-list.net/')
         site1.get_site_content()
             
