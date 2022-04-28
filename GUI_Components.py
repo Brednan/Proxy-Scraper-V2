@@ -97,12 +97,25 @@ class StartButton:
         self.button.place(anchor=tk.SW, x=pos[0], y=pos[1])
 
     def submit(self):
-        self.status.status_var.set('Status: Scraping')
-        threading.Thread(target=self.bot_sequence).start()
+        error_message = ErrorMessage('./images/error_logo.ico')
+
+        if len(self.output.entry.get().strip()) < 1:
+            threading.Thread(target=error_message.custom_error, args=((400, 70), ('default', 17), 'Please select an output file!')).start()
+
+        else:
+            self.status.status_var.set('Status: Scraping')
+            threading.Thread(target=self.bot_sequence).start()
 
     def bot_sequence(self):
-        scraper = Scraper(self.types)
-        scraper.scrape_proxies()
+        error_message = ErrorMessage('./images/error_logo.ico')
+
+        try:
+            scraper = Scraper(self.types)
+            scraper.scrape_proxies()
+        except:
+            threading.Thread(target=error_message.error_scraping, args=((250, 50), ('default', 15))).start()
+        
+        self.status.status_var.set('Status: None')
 
 
 class StopButton:
@@ -113,3 +126,30 @@ class StopButton:
 
     def stop_process(self):
         self.status.status_var.set('Status: None')
+
+class ErrorMessage:
+    def __init__(self, icon):
+        self.icon = icon
+
+    def error_scraping(self, size:tuple, font):
+        window = tk.Tk()
+        window.geometry(f'{size[0]}x{size[1]}')
+        window.resizable(width=False, height=False)
+        window.iconbitmap(self.icon)
+        window.title('Error')
+
+        message = tk.Label(window, fg='red', font=font, text='Error Scraping!')
+        message.place(x=int(size[0]/2), y=int(size[1]/2), anchor=tk.CENTER)
+
+        window.mainloop()
+    
+    def custom_error(self, size:tuple, font, text):
+        window = tk.Tk()
+        window.geometry(f'{size[0]}x{size[1]}')
+        window.resizable(width=False, height=False)
+        window.iconbitmap(self.icon)
+        window.title('Error')
+
+        message = tk.Label(window, fg='red', font=font, text=text)
+        message.place(x=int(size[0]/2), y=int(size[1]/2), anchor=tk.CENTER)
+        window.mainloop()

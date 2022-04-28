@@ -1,5 +1,6 @@
 import requests as req
 from bs4 import BeautifulSoup
+import threading
 
 class Scraper:
     def __init__(self, types):
@@ -12,9 +13,10 @@ class Scraper:
         if types.socks4_checked.get() == 1:
             self.socks4 = True
 
-    def scrape_proxies(self):
+    def scrape_proxies(self, error_scraping):
         site1 = Site1('https://free-proxy-list.net/')
         site1.get_site_content()
+            
 
 
 class Site1:
