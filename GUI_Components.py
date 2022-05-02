@@ -1,7 +1,6 @@
-import sys
+import traceback
 import tkinter as tk
 from tkinter.filedialog import askopenfilename
-from test import loop_func
 import threading
 from scraper import Scraper
 
@@ -112,9 +111,10 @@ class StartButton:
         try:
             scraper = Scraper(self.types)
             scraper.scrape_proxies()
-        except:
+        except Exception:
+            print(traceback.print_exception(Exception))
             threading.Thread(target=error_message.error_scraping, args=((250, 50), ('default', 15))).start()
-        
+
         self.status.status_var.set('Status: None')
 
 

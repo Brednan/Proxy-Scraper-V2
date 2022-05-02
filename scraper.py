@@ -15,8 +15,7 @@ class Scraper:
 
     def scrape_proxies(self):
         site1 = Site1('https://free-proxy-list.net/')
-        site1.get_site_content()
-            
+        site1.get_proxies()
 
 
 class Site1:
@@ -26,4 +25,14 @@ class Site1:
     def get_site_content(self):
         page = req.get(self.url)
         soup = BeautifulSoup(page.text, 'html.parser')
-        print(soup)
+        return soup
+
+    def get_proxies(self):
+        soup = self.get_site_content()
+
+        proxy_list = soup.find(id='list').div.find('tbody')
+
+        for proxy_item in proxy_list:
+            proxy_info = proxy_item.find_all('td')
+            ip = proxy_info[0].get_text()
+            print(ip)
