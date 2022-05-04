@@ -101,6 +101,9 @@ class StartButton:
         if len(self.output.entry.get().strip()) < 1:
             threading.Thread(target=error_message.custom_error, args=((400, 70), ('default', 17), 'Please select an output file!')).start()
 
+        if self.types.http_checked.get() == 0 and self.types.socks4_checked.get() == 0:
+            threading.Thread(target=error_message.custom_error, args=((400, 70), ('default', 17), 'Please select at least one proxy type!')).start()
+
         else:
             self.status.status_var.set('Status: Scraping')
             threading.Thread(target=self.bot_sequence).start()

@@ -34,5 +34,8 @@ class Site1:
 
         for proxy_item in proxy_list:
             proxy_info = proxy_item.find_all('td')
+
             ip = proxy_info[0].get_text()
-            print(ip)
+            port = proxy_info[1].get_text()
+
+            print(f'{ip}:{port}')
