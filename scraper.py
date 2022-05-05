@@ -16,13 +16,15 @@ class Scraper:
 
     def scrape_proxies(self):
         site1 = Site1(self)
-        site1.get_proxies()
+        site1.get_http_proxies()
+        site1.get_socks_proxies()
         print(self.proxies_scraped)
 
 
 class Site1:
     def __init__(self, main_class):
-        self.urls = ('https://free-proxy-list.net/', 'https://www.sslproxies.org/')
+        self.http_proxy_urls = ('https://free-proxy-list.net/', 'https://www.sslproxies.org/', 'https://www.us-proxy.org/')
+        self.socks4_url = 'https://www.socks-proxy.net/'
         self.main = main_class
 
     def get_site_content(self, url):
@@ -30,9 +32,9 @@ class Site1:
         soup = BeautifulSoup(page.text, 'html.parser')
         return soup
 
-    def get_proxies(self):
-        proxies = []
-        for url in self.urls:
+    def get_http_proxies(self):
+        http_proxies = []
+        for url in self.http_proxy_urls:
             soup = self.get_site_content(url)
 
             proxy_list = soup.find(id='list').div.find('tbody')
@@ -43,15 +45,34 @@ class Site1:
                 ip = proxy_info[0].get_text()
                 port = proxy_info[1].get_text()
 
-                proxies.append(f'{ip}:{port}')
+                http_proxies.append(f'{ip}:{port}')
 
-        proxies = list(dict.fromkeys(proxies))
+        http_proxies = list(dict.fromkeys(http_proxies))
 
-        for proxy in proxies:
-            proxy = proxy.split(':')
-
+        for proxy in http_proxies:
             self.main.proxies_scraped.append({
-                'ip': proxy[0],
-                'port': proxy[1],
+                'proxy': proxy,
                 'type': 'http'
+            })
+
+    def get_socks_proxies(self):
+        socks4_proxies = []
+        soup = self.get_site_content(self.socks4_url)
+
+        proxy_list = soup.find(id='list').div.find('tbody')
+
+        for proxy_item in proxy_list:
+            proxy_info = proxy_item.find_all('td')
+
+            ip = proxy_info[0].get_text()
+            port = proxy_info[1].get_text()
+
+            socks4_proxies.append(f'{ip}:{port}')
+
+        socks4_proxies = list(dict.fromkeys(socks4_proxies))
+
+        for proxy in socks4_proxies:
+            self.main.proxies_scraped.append({
+                'proxy': proxy,
+                'type': 'socks4'
             })
