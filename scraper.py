@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import threading
 
 class Scraper:
-    def __init__(self, types):
+    def __init__(self, types, timeout):
         self.https = False
         self.socks4 = False
         self.proxies_scraped = []

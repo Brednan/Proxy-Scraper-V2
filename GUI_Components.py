@@ -112,7 +112,7 @@ class StartButton:
         error_message = ErrorMessage('./images/error_logo.ico')
 
         try:
-            scraper = Scraper(self.types)
+            scraper = Scraper(self.types, self.timeout.slider.get())
             scraper.scrape_proxies()
         except Exception:
             print(traceback.print_exception(Exception))
