@@ -1,4 +1,5 @@
 import requests
+import traceback
 
 class Checker:
     def __init__(self, timeout):
@@ -6,12 +7,12 @@ class Checker:
 
     def check_http(self, proxy):
         schema = {
-            'http': f'http://{proxy}',
-            'https': f'https://{proxy}'
+            "http": f'http://{proxy}',
+            "https": f'http://{proxy}',
         }
 
         try:
-            status_code = requests.get('https://www.youtube.com/', timeout=self.timeout/1000, proxies=schema).status_code
+            status_code = requests.get('https://api.ipify.org/?format=json', timeout=float(self.timeout/1000), proxies=schema).status_code
 
             if status_code < 300 and status_code >= 200:
                 return 1
@@ -27,14 +28,11 @@ class Checker:
             'http': f'socks4://{proxy}',
             'https': f'socks4://{proxy}'
         }
-        status_code = requests.get('https://www.google.com/', timeout=self.timeout / 1000, proxies=schema).status_code
 
-        if status_code >= 200 and status_code < 300:
-            return 1
         try:
-            status_code = requests.get('https://www.google.com/', timeout=self.timeout/1000, proxies=schema).status_code
+            status_code = requests.get('https://api.ipify.org/?format=json', timeout=float(self.timeout/1000), proxies=schema).status_code
 
-            if status_code >= 200 and status_code < 300:
+            if status_code < 300 and status_code >= 200:
                 return 1
 
             else:
@@ -42,3 +40,4 @@ class Checker:
 
         except:
             return 0
+
