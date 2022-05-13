@@ -1,12 +1,14 @@
 import requests as req
 from bs4 import BeautifulSoup
 import threading
+from checker import Checker
 
 class Scraper:
-    def __init__(self, types, timeout):
+    def __init__(self, types):
         self.https = False
         self.socks4 = False
-        self.proxies_scraped = []
+        self.http_proxies_scraped = []
+        self.socks4_proxies_scraped = []
 
         if types.http_checked.get() == 1:
             self.https = True
@@ -16,9 +18,13 @@ class Scraper:
 
     def scrape_proxies(self):
         site1 = Site1(self)
-        site1.get_http_proxies()
-        site1.get_socks_proxies()
-        print(self.proxies_scraped)
+
+        if self.https == 1:
+            site1.get_http_proxies()
+
+        if self.socks4 == 1:
+            site1.get_socks_proxies()
+
 
 
 class Site1:
@@ -50,10 +56,7 @@ class Site1:
         http_proxies = list(dict.fromkeys(http_proxies))
 
         for proxy in http_proxies:
-            self.main.proxies_scraped.append({
-                'proxy': proxy,
-                'type': 'http'
-            })
+            self.main.http_proxies_scraped.append(proxy)
 
     def get_socks_proxies(self):
         socks4_proxies = []
@@ -72,7 +75,4 @@ class Site1:
         socks4_proxies = list(dict.fromkeys(socks4_proxies))
 
         for proxy in socks4_proxies:
-            self.main.proxies_scraped.append({
-                'proxy': proxy,
-                'type': 'socks4'
-            })
+            self.main.socks4_proxies_scraped.append(proxy)

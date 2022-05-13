@@ -3,6 +3,9 @@ import tkinter as tk
 from tkinter.filedialog import askopenfilename
 import threading
 from scraper import Scraper
+from checker import Checker
+from save_proxies import SaveProxies
+
 
 class MainWindow:
     def __init__(self, size: tuple, is_resizeable: bool, icon, title, bg:str):
@@ -84,13 +87,14 @@ class Status:
         self.status_var.set('Status: Scraping')
 
 
-class StartButton:
+class StartButton(Checker, SaveProxies):
     def __init__(self, master, pos: tuple, status, output, types, timeout, threads):
         self.status = status
         self.output = output
         self.types = types
         self.timeout = timeout
         self.threads = threads
+        Checker.__init__(self, self.timeout.slider.get(), self)
 
         self.button = tk.Button(master, text='START', fg='white', bg='#00BD03', font=('Arial TUR', 20), relief=tk.FLAT, width=8, command=lambda: self.submit())
         self.button.place(anchor=tk.SW, x=pos[0], y=pos[1])
@@ -98,7 +102,7 @@ class StartButton:
     def submit(self):
         error_message = ErrorMessage('./images/error_logo.ico')
 
-        if len(self.output.entry.get().strip()) < 1:
+        if len(self.output.entry.get()) < 1:
             threading.Thread(target=error_message.custom_error, args=((400, 70), ('default', 17), 'Please select an output file!')).start()
 
         elif self.types.http_checked.get() == 0 and self.types.socks4_checked.get() == 0:
@@ -109,14 +113,49 @@ class StartButton:
             threading.Thread(target=self.bot_sequence).start()
 
     def bot_sequence(self):
+        SaveProxies.__init__(self, self.output.entry.get())
         error_message = ErrorMessage('./images/error_logo.ico')
+        scraper = Scraper(self.types)
+        self.working_http = []
+        self.working_socks = []
 
         try:
-            scraper = Scraper(self.types, self.timeout.slider.get())
             scraper.scrape_proxies()
+            if self.status.status_var.get() != 'Status: None':
+                self.status.status_var.set('Status: Checking Proxies')
+
         except Exception:
             print(traceback.print_exception(Exception))
             threading.Thread(target=error_message.error_scraping, args=((250, 50), ('default', 15))).start()
+
+        try:
+            if self.types.http_checked.get() == 1:
+                i = 0
+                while i < len(scraper.http_proxies_scraped):
+                    if self.status.status_var.get() == 'Status: None':
+                        break
+
+                    if threading.active_count() <= self.threads.slider.get():
+                        proxy = scraper.http_proxies_scraped[i]
+                        threading.Thread(target=self.check_http, args=(proxy,)).start()
+                        i += 1
+
+            if self.types.socks4_checked.get() == 1:
+                i = 0
+                while i < len(scraper.socks4_proxies_scraped):
+                    if self.status.status_var.get() == 'None':
+                        break
+
+                    if threading.active_count() <= self.threads.slider.get():
+                        proxy = scraper.socks4_proxies_scraped[i]
+                        threading.Thread(target=self.check_socks4, args=(proxy,)).start()
+                        i += 1
+
+            self.save_http(self.working_http)
+            self.save_socks(self.working_socks)
+
+        except Exception:
+            threading.Thread(target=error_message.custom_error, args=((250, 50), ('default', 15), 'Error checking proxies!')).start()
 
         self.status.status_var.set('Status: None')
 
