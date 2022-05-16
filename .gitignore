@@ -4,3 +4,5 @@ __pycache__
 env
 "External Libraries"
 "Scratches and Consoles"
+geckodriver.log
+geckodriver.exe
